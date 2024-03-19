@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp | Register</title>
+  <link rel="icon" href="../images/240_F_532206245_N1xYEHrZVIWU1ihamWwmDbh1gZWGU7Jl-removebg-preview.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *{
+        margin: 0;
+        padding:0;
+        box-sizing: border-box;
+    }
+    
+    html, body{
+        width: 100%;
+        height: 100%;
+        font-family: gilroy;
+        overflow: hidden;
+    }
+    .error-message {
+      color: red;
+      font-size: 14px;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+  </style>
+</head>
+<body class="bg-black">
+  <div class="register-container w-full h-screen flex items-center justify-center">
+    <div class="register w-full h-full  md:!w-1/4 md:!h-[65vh] bg-zinc-300 md:rounded-lg text-center flex flex-col items-center justify-center md:block md:py-4 px-7">
+      <img class="w-[50vw] md:w-[12vw] md:ml-12" src="https://static.whatsapp.net/rsrc.php/v3/y7/r/DSxOAUB0raA.png" alt="">
+      <form id="registrationForm" class="mt-6" action="/register" method="post">
+        <% if (messages.length > 0) { %>
+          <p class="error-message mt-0 md:mt-6"><%= messages %></p>
+        <% } %>
+        <input id="username" class="w-full py-1 px-4 outline-green-600 rounded mb-6"  type="text" placeholder="Username" name="username">
+        <input id="contact" class="w-full py-1 px-4 outline-green-600 rounded mb-6" type="number" placeholder="Contact Number" name="contact">
+        <input id="password" class="w-full py-1 px-4 outline-green-600 rounded"  type="password" placeholder="Password" name="password">
+        <div id="loginError" class="error-message mb-6"></div>
+        <button class="bg-green-600 text-white py-1 px-4 rounded mb-4">Create Account</button>
+      </form>
+      <span>Already have an account ? <a href="/login" class="text-blue-500 ">Log In</a></span>
+    </div>
+  </div>
+  <script>
+
+    
+    function validateAllData() { 
+      const usernameInput = document.getElementById('username'); 
+      const passwordInput = document.getElementById('password');
+      const contactNumberInput = document.getElementById('contact');
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      const contactNumber = contactNumberInput.value.trim();
+      const showError = (message) => {
+        document.getElementById('loginError').innerText = message;
+        usernameInput.value = '';
+        passwordInput.value = ''; 
+        contactNumberInput.value = ''; 
+        return false;
+      };
+
+      // Validation for username: Cannot be blank
+      if (username === '') {
+        return showError('Username cannot be blank.');
+      }
+
+      // Validation for contact number: Must contain at least 10 numeric values
+      if (!/^\d{10}$/.test(contactNumber)) {
+        return showError('Contact number must contain exactly 10 numeric digits.');
+      }
+
+      // Validation for password: Must be at least 8 characters with specific criteria
+      if (!/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+        return showError('Password must be at least 8 characters long, contain at least one uppercase letter, one numeric value, and one special character.');
+      }
+
+      // If all validation passes, clear the error message
+      document.getElementById('loginError').innerText = '';
+      return true;
+  }
+  </script>
+</body>
+</html>

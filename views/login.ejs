@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp | Login</title>
+  <link rel="icon" href="../images/240_F_532206245_N1xYEHrZVIWU1ihamWwmDbh1gZWGU7Jl-removebg-preview.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *{
+        margin: 0;
+        padding:0;
+        box-sizing: border-box;
+    }
+    
+    html, body{
+        width: 100%;
+        height: 100%;
+        font-family: gilroy;
+    }
+    .error-message{
+      color: red;
+    }
+  </style>
+</head>
+<body class="bg-black">
+  <div class="register-container w-full h-screen flex items-center justify-center">
+    <div class="register w-full h-full md:w-1/4 md:h-[65vh] bg-zinc-300 flex flex-col items-center justify-center md:block md:rounded-lg text-center md:py-4 px-7">
+      <img class=" w-[50vw] md:w-[12vw] md:ml-12" src="https://static.whatsapp.net/rsrc.php/v3/y7/r/DSxOAUB0raA.png" alt="">
+      <form class="mt-10" action="/login" method="post">
+        <% if(error.length > 0){ %>
+          <p class="error-message mb-4"><%= error %></p>
+        <% } %>
+        <input class="w-full py-1 px-4 outline-green-600 rounded mb-6"  type="text" placeholder="Username" name="username">
+        <input class="w-full py-1 px-4 outline-green-600 rounded mb-6"  type="password" placeholder="Password" name="password">
+        <button class="bg-green-600 text-white py-1 px-4 rounded mb-6">Log In</button>
+      </form>
+      <span>Don't have an account ? <a href="/" class="text-blue-500">Sign Up</a></span>
+    </div>
+  </div>
+</body>
+</html>

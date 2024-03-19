@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="../images/240_F_532206245_N1xYEHrZVIWU1ihamWwmDbh1gZWGU7Jl-removebg-preview.png">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.css"
+        integrity="sha512-0Nyh7Nf4sn+T48aTb6VFkhJe0FzzcOlqqZMahy/rhZ8Ii5Q9ZXG/1CbunUuEbfgxqsQfWXjnErKZosDSHVKQhQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #555555;
+        }
+
+        .right {
+            display: none;
+        }
+
+        .img-div {
+            left: 57%;
+            top: 27%;
+        }
+
+        .inputArea {
+            height: 8vh !important;
+            outline: none !important;
+            color: aliceblue !important;
+        }
+
+        .emoji {
+            height: 8vh !important;
+        }
+
+        .emojionearea .emojionearea-editor {
+            color: white !important;
+            padding: 0rem !important;
+            margin-top: 0.8vw !important;
+        }
+
+        .emojionearea-button {
+            margin-top: 0.55vw !important;
+        }
+
+        .emojionearea-button-open {
+            background-image: url();
+        }
+
+        .emojionearea-search {
+            color: black;
+        }
+
+        .groups,
+        .allchats,
+        .allRequest, .myProfile {
+            left: -100%;
+            transition: all ease 0.3s;
+        }
+
+        .userDetails {
+            transition: all ease 0.6s;
+        }
+
+        .overlay {
+            background-color: #5b5b5b96;
+        }
+
+        @media (max-width:700px) {
+            .emojionearea .emojionearea-editor {
+                margin-top: 3vw !important;
+            }
+
+            .emojionearea-button {
+                margin-top: 2vw !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main w-full h-screen bg-[#202C33] flex">
+        <div class="img-div w-[50vh] h-[50vh] absolute hidden">
+            <div class="inside-img w-full h-[40vh]">
+                <img class="w-full h-full object-cover" src="../images/bg-img.png" alt="">
+            </div>
+            <div class="text-div">
+                <h2 class="text-center mt-6 text-[#E8ECEE]">No chats open yet.</h2>
+            </div>
+        </div>
+        <div class="left w-full h-screen md:!w-[35vw] md:h-screen bg-[#111B21] border-r-[1px] border-[#2B3438]  ">
+            <div
+                class="user w-full h-[9vh] md:w-full md:h-[5vw] bg-[#202C33] text-[#E8ECEE] flex items-center gap-2 justify-between px-2">
+                <div
+                    class="ImageDiv h-[8vh] w-full overflow-hidden gap-2 md:h-[3.5vw] flex items-center md:gap-4 rounded-full">
+                    <img onclick="MyProfile()" class="CurrentUserImage md:w-[3.5vw] md:h-full h-[14vw] w-[14vw] bg-[#B1B1B1] object-cover rounded-full cursor-pointer" src="/images/uploads/<%= user.img %>" alt="">
+                    <h3><%= user.username %></h3>
+                </div>
+                <div class="join flex gap-3 md:gap-4">
+                    <button title="Join Groups" onclick="groupOption()" class="group-btn w-9 h-9 bg-[#111B21] rounded-full text-[#E8ECEE]"><i class="ri-user-add-line"></i></button>
+                    <button title="Create Groups" onclick="createGroup()" class="w-9 h-9 bg-[#111B21] rounded-full text-[#E8ECEE]"><i class="ri-add-line"></i></button>
+                    <button title="New Chats" onclick="chatOption()" class="chat-btn w-9 h-9 bg-[#111B21] rounded-full text-[#E8ECEE]"><i class="ri-chat-new-line"></i></button>
+                    <button title="User Request" onclick="RequestOption()" class="Request-btn w-9 h-9 bg-[#111B21] rounded-full text-[#E8ECEE]"><i class="ri-user-received-2-line"></i></button>
+                </div>
+            </div>
+            <div class="bottom w-full h-[88.9vh] md:h-[86vh] overflow-y-auto text-[#E8ECEE]"></div>
+        </div>
+        <div class="right w-full md:!w-[65vw] h-screen bg-black">
+            <div class="top w-full h-[9vh] md:h-[5vw] bg-[#202C33] md:px-4">
+                <div
+                    class=" w-full h-[9vh] md:h-[5vw] bg-[#202C33] text-[#E8ECEE] flex items-center text-lg md:text-base ">
+                    <i onclick="backToChat()" id="backArrowUserChat"
+                        class="ri-arrow-left-line text-3xl cursor-pointer md:hidden"></i>
+                    <div onclick="UserDetails()" class="user-div flex items-center gap-4 user cursor-pointer">
+                        <div
+                            class="ImageDiv w-[14vw] h-[14vw] md:w-[3.8vw] md:h-[3.8vw] rounded-full overflow-hidden bg-[#B1B1B1]">
+                            <img id="currentchatImg" class="w-full h-full object-cover" src="" alt="">
+                        </div>
+                        <div class="contactstutas">
+                            <h3 id="currentchatUsername"></h3>
+                            <p class="onlineStutas text-xs text-zinc-300"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="conversationArea w-full h-[152vw] md:h-[78.5vh] px-4 md:px-8 py-4 overflow-y-auto">
+            </div>
+            <div
+                class="inputarea w-full md:h-[10.9vh] md:bg-[#202C33] flex items-center justify-between md:gap-4 px-1 md:px-6 ">
+                <input class="emoji !h-[6.5vh] md:!h-[8vh] md:w-[62vw] outline-none px-4 bg-[#111B21] text-[#E8ECEE] text-base md:text-base rounded-full md:rounded-lg border-none" type="text" placeholder="Message" autofocus="on">
+                <button class="sendbtn text-4xl md:text-[2.3vw] text-[#7C8B95]"><i class="ri-send-plane-2-fill"></i></button>
+            </div>
+        </div>
+
+        <div class="userDetails md:w-[65vw] w-full !h-screen absolute top-[-100%]  md:right-[0%] z-10 bg-[#0C1317]">
+            <div class="contactInfo w-full h-[10vh] md:h-[5vw] bg-[#202C33]">
+                <div class="contact h-full flex items-center gap-6 px-4 md:px-5 text-[#E8ECEE]">
+                    <i onclick="closeContact()" id="closeContact"
+                        class="ri-close-line text-3xl text-[#8696A0] cursor-pointer"></i>
+                    <h2 class="text-lg">Contact info</h2>
+                </div>
+            </div>
+            <div class="img-div w-full h-[60vw] md:h-[25vw] flex items-center justify-center bg-[#111B21]">
+                <div class="imgandName">
+                    <div class=" w-[32vw] h-[32vw] md:w-[18.5vw] md:h-[18.5vw] rounded-full overflow-hidden bg-[#B1B1B1]">
+                        <img id="UserImage" class="w-full h-full object-cover" src="" alt="">
+                    </div>
+                    <h1 class="ContactUserName text-center text-xl mt-4 md:mt-2 text-[#E8ECEE] font-normal"></h1>
+                </div>
+            </div>
+            <div class="about-div w-full h-[40vw] md:h-[6.5vw] bg-[#111B21] mt-3 px-6 md:px-7 flex flex-col gap-3 md:gap-0 justify-center">
+                <p class="text-[#8696A0]">About</p>
+                <h2 class="AboutContactUser text-[#E8ECEE] font-normal"></h2>
+            </div>
+            <div class="Unfriend-Delete w-full h-[40vw] md:h-[8.6vw] bg-[#111B21] flex flex-col justify-center mt-3">
+                <div title="Delete Chat" class="DeleteChat w-full h-[20vw] md:h-[4.3vw] flex items-center gap-4 md:gap-6 text-[#F15C6D] px-6 md:px-7 cursor-pointer hover:bg-[#202C33]">
+                    <i class="ri-delete-bin-4-fill text-3xl md:text-2xl"></i>
+                    <h2 class="text-lg md:text-base">Delete Chat</h2>
+                </div>
+                <div title="Unfriend" class="Unfriend w-full h-[20vw] md:h-[4.3vw] flex items-center gap-4 md:gap-6 text-[#F15C6D] px-6 md:px-7 cursor-pointer hover:bg-[#202C33]">
+                    <i class="ri-user-forbid-fill text-3xl md:text-2xl"></i>
+                    <h2 class="text-lg md:text-base">Unfriend / Leave Group</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="myProfile w-full md:w-[35vw] h-screen text-[#E8ECEE] border-r-[1px] border-[#2B3438] absolute">
+            <div class="myProfileHead w-full h-[10vh] md:h-[8vw] bg-[#202C33] flex items-center">
+                <i onclick="OffMyProfile()" id="backArrowProfile" class="ri-arrow-left-line text-3xl text-[#8696A0] cursor-pointer px-5"></i>
+                <h1 class="text-xl">Profile</h1>
+            </div>
+            <div class="myProfileBottom w-full h-[83vh] bg-[#111B21] overflow-y-auto ">
+                <div
+                    class="ProfilePictureDiv w-full h-[50vw] md:h-[20vw] flex justify-center items-center border-b-[1px] border-[#2B3438] ">
+                    <div onclick="ChooseImage()" class="ProfilePicture w-[38vw] h-[38vw] md:w-[16.5vw] md:h-[16.5vw] rounded-full overflow-hidden relative cursor-pointer bg-[#B1B1B1]">
+                        <form id="ImageForm" hidden action="/upload" method="post" enctype="multipart/form-data">
+                            <input id="fileInput" type="file" name="image">
+                        </form>
+                        <img class="absolute w-full h-full object-cover" src="/images/uploads/<%= user.img %>" alt="">
+                        <div class="overlay hidden md:w-[16.5vw] md:h-[16.5vw] md:rounded-full md:absolute md:z-10 md:opacity-0 md:hover:opacity-100 md:flex md:flex-col md:items-center md:justify-center">
+                            <div class="changediv w-[9.8vw] text-center text-[#BFC5C6]">
+                                <i class="ri-camera-fill text-3xl"></i>
+                                <h1>CHANGE PROFILE PICTURE</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="MyDetails w-full h-[28vw] py-4">
+                    <form action="/update" method="post">
+                        <div class="nameAboutDetails w-full md:h-[19vw] px-7">
+                            <h5 class="text-[#017A65] text-lg md:text-base mb-2">Your Name</h5>
+                            <input class="Myname mb-4 text-lg md:text-base w-1/2 text-[#E8ECEE] bg-[#111B21] outline-none py-1" type="text" name="username" value="<%= user.username %>" autocomplete="off">
+                            <h5 class="text-[#017A65] text-lg md:text-base mb-2">About</h5>
+                            <textarea class="aboutMe text-lg md:text-base w-full h-fit resize-none text-[#E8ECEE] bg-[#111B21] outline-none py-1" type="text" name="about" autocomplete="off"><%= user.about %></textarea>
+                            <button class="updateDetails text-lg md:text-base py-2 px-6 bg-green-600 mt-4 mb-4 rounded-lg">Update</button>
+                        </div>
+                    </form>
+                    <a href="/logout">
+                        <div class="logout w-full text-lg md:text-base h-[15vw] md:h-[4vw] bg-red-600 mt-6 md:mt-4 flex items-center justify-center">
+                            <h1 class="font-semibold">Logout</h1>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="groups w-full md:w-[35vw] h-screen text-[#E8ECEE] border-r-[1px] border-[#2B3438] absolute">
+            <div class="groupsHead w-full h-[10vh] md:h-[8vw] bg-[#202C33] flex items-center">
+                <div class="backAndName w-full h-[5vw] flex items-center gap-4 text-[#E8ECEE] px-5">
+                    <i onclick="OffGroupOption()" id="backArrowGroup"
+                        class="ri-arrow-left-line text-3xl text-[#8696A0] cursor-pointer "></i>
+                    <h1 class="text-xl">Groups</h1>
+                </div>
+            </div>
+            <div class="groupsName w-full h-[88.5vh] md:h-[82vh] bg-[#111B21] overflow-y-auto"></div>
+        </div>
+
+        <div class="allchats w-full md:w-[35vw] h-screen text-[#E8ECEE] border-r-[1px] absolute border-[#2B3438]">
+            <div class="chatsHead w-full h-[10vh] md:h-[8vw] bg-[#202C33] flex items-center">
+                <div class="backAndName w-full h-[5vw] flex items-center gap-4  text-[#E8ECEE] px-5">
+                    <i onclick="OffchatOption()" id="backArrowChats"
+                        class="ri-arrow-left-line text-3xl  text-[#8696A0] cursor-pointer"></i>
+                    <h1 class="text-xl">Chats</h1>
+                </div>
+            </div>
+            <div class="chatsName w-full h-[88.5vh] md:h-[82vh] bg-[#111B21] overflow-y-auto"></div>
+        </div>
+
+        <div class="allRequest w-full md:w-[35vw] h-screen text-[#E8ECEE] border-r-[1px] border-[#2B3438] absolute">
+            <div class="requestHead w-full h-[10vh] md:h-[8vw] bg-[#202C33] flex items-center">
+                <div class="backAndName w-full h-[5vw] flex items-center gap-4  text-[#E8ECEE] px-5">
+                    <i onclick="OffRequestOption()" id="backArrowReqeust"
+                        class="ri-arrow-left-line text-3xl  text-[#8696A0] cursor-pointer"></i>
+                    <h1 class="text-xl">User Request</h1>
+                </div>
+            </div>
+            <div class="RequestName w-full h-[88.5vh] md:h-[82vh] bg-[#111B21] overflow-y-auto"></div>
+        </div>
+
+        <div class="sendRequest w-full md:w-[35vw] h-screen text-[#E8ECEE] border-r-[1px] border-[#2B3438] hidden">
+            <div class="sendHead w-full h-[8vw] bg-[#202C33] flex items-center">
+                <div class="backAndName w-full h-[5vw] flex items-center gap-4  text-[#E8ECEE] px-2">
+                    <i id="backArrowReqeust" class="ri-arrow-left-line text-3xl "></i>
+                    <h1 class="text-xl">Send all Request</h1>
+                </div>
+            </div>
+            <div class="sendRequestName w-full h-[88.5vh] md:h-[82vh] bg-[#111B21] overflow-y-auto"></div>
+        </div>
+        
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var currentchatUsername = null;
+        var currentUser = '<%= user.username %>'
+        const sender = `<%= user.username %>`
+        const currentUserId = `<%= user._id%>`
+        var socket = io();
+        socket.emit('join-server', currentUser)
+
+        socket.on('show-groups', showGroups => {
+            showGroups.forEach(function (eachGroup) {
+                appendnewGroup(eachGroup.img, eachGroup.groupName, eachGroup._id)
+            })
+        })
+
+        function joinGroup(GroupName) {
+            const groupName = GroupName
+            socket.emit('join-group', {
+                groupName,
+                sender
+            })
+        }
+
+        socket.on('group-joined', GroupDetail => {
+
+            if (document.querySelector(`#abcd_${GroupDetail._id}`)) {
+                document.querySelector(`#abcd_${GroupDetail._id}`).parentNode.removeChild(document.querySelector(`#abcd_${GroupDetail._id}`))
+            }
+            appendnewChat(GroupDetail.img, GroupDetail.groupName, GroupDetail._id)
+        })
+
+        socket.on('myFriends', MyFriends => {
+            if (MyFriends.length > 0) {
+                MyFriends.forEach(AllFriends => {
+                    appendnewChat(AllFriends.img, AllFriends.username, AllFriends._id)
+                })
+            }
+        })
+
+        socket.on('NotMyFriends', NotFriends => {
+            if (NotFriends.length > 0) {
+                NotFriends.forEach(AllNotFriends => {
+                    NotMyFriends(AllNotFriends.img, AllNotFriends.username, AllNotFriends._id)
+                })
+            }
+        })
+
+        socket.on('Show-Recieve-Request', RequestedUserDetails => {
+            if (RequestedUserDetails.length > 0) {
+                RequestedUserDetails.forEach(RequestedUser => {
+                    AllRequestedUser(RequestedUser.img, RequestedUser.username, RequestedUser._id)
+                })
+            }
+        })
+
+        socket.on('Show-Send-Request', SendRequestDetails => {
+            if (SendRequestDetails.length > 0) {
+                SendRequestDetails.forEach(SendRequestUser => {
+                    SendingRequest(SendRequestUser.img, SendRequestUser.username, SendRequestUser._id)
+                    if (document.querySelector(`#send_${SendRequestUser._id}`)) {
+                        const sendNode = document.querySelector(`#send_${SendRequestUser._id}`);
+                        const abcd2Node = document.querySelector(`#notFriends_${SendRequestUser._id}`);
+                        if (abcd2Node && abcd2Node.parentNode) {
+                            abcd2Node.parentNode.replaceChild(sendNode, abcd2Node);
+                        } else {
+                            console.error(`Parent node of #notFriends_${SendRequestUser._id} not found.`);
+                        }
+                    }
+                })
+            }
+        })
+
+        socket.on('Recieve-Request', RecieveRequest => {
+            if (RecieveRequest.length > 0) {
+                RecieveRequest.forEach(RecieveAllRequest => {
+                    if (document.querySelector(`#notFriends_${RecieveAllRequest._id}`)) {
+                        document.querySelector(`#notFriends_${RecieveAllRequest._id}`).parentNode.removeChild(document.querySelector(`#notFriends_${RecieveAllRequest._id}`))
+                    }
+                    AllRequestedUser(RecieveAllRequest.img, RecieveAllRequest.username, RecieveAllRequest._id)
+                })
+            }
+        })
+
+        socket.on('Send-Request-user', SendRequest => {
+            SendingRequest(SendRequest.img, SendRequest.username, SendRequest._id)
+            if (document.querySelector(`#send_${SendRequest._id}`)) {
+                const sendNode = document.querySelector(`#send_${SendRequest._id}`);
+                const abcd2Node = document.querySelector(`#notFriends_${SendRequest._id}`);
+                if (abcd2Node && abcd2Node.parentNode) {
+                    abcd2Node.parentNode.replaceChild(sendNode, abcd2Node);
+                } else {
+                    console.error(`Parent node of #notFriends_${SendRequest._id} not found.`);
+                }
+            }
+        })
+
+        socket.on('Request-Accepted', AcceptRequestUser => {
+            if (document.querySelector(`#send_${AcceptRequestUser._id}`)) {
+                document.querySelector(`#send_${AcceptRequestUser._id}`).parentNode.removeChild(document.querySelector(`#send_${AcceptRequestUser._id}`))
+            }
+            appendnewChat(AcceptRequestUser.img, AcceptRequestUser.username, AcceptRequestUser._id)
+        })
+
+        socket.on('UserRequestAccept', RequestAccepted => {
+            if (document.querySelector(`#abcd_${RequestAccepted._id}`)) {
+                document.querySelector(`#abcd_${RequestAccepted._id}`).parentNode.removeChild(document.querySelector(`#abcd_${RequestAccepted._id}`))
+            }
+            appendnewChat(RequestAccepted.img, RequestAccepted.username, RequestAccepted._id)
+        })
+
+        function MyProfile(){
+            document.querySelector('.myProfile').style.left = "0%"
+        }
+
+        function OffMyProfile(){
+            document.querySelector('.myProfile').style.left = "-100%"
+        }
+
+        function groupOption() {
+            const groupDiv = document.querySelector('.groups')
+            groupDiv.style.left = "0%"
+        }
+
+        function OffGroupOption() {
+            const groupDiv = document.querySelector('.groups')
+            groupDiv.style.left = "-100%"
+        }
+
+
+        function chatOption() {
+            const ChatDiv = document.querySelector('.allchats')
+            ChatDiv.style.left = "0%"
+        }
+
+        function OffchatOption() {
+            const ChatDiv = document.querySelector('.allchats')
+            ChatDiv.style.left = "-100%"
+        }
+
+        function RequestOption() {
+            const ChatDiv = document.querySelector('.allRequest')
+            ChatDiv.style.left = "0%"
+        }
+
+        function OffRequestOption() {
+            const ChatDiv = document.querySelector('.allRequest')
+            ChatDiv.style.left = "-100%"
+        }
+
+        function ChooseImage() {
+            document.querySelector("#fileInput").click();
+            document.querySelector("#ImageForm").addEventListener("change", function () {
+                document.querySelector("#ImageForm").submit();
+            })
+        }
+
+
+        function appendnewChat(img, username, chatId) {
+            if (!document.querySelector(`#abcd_${chatId}`)) {
+                const template = `
+                <div id="abcd_${chatId}" onclick="setCurrentchat('/images/uploads/${img}', '${username}', '${chatId}')" class="contact cursor-pointer w-full h-[17.5vw] md:h-[5.46vw] bg-[#111B21] border-[#202C33] pl-2 border-b-[1px] flex items-center gap-4 hover:bg-[#202C33] text-lg md:text-base">
+                    <div class="ImageDiv w-[14vw] h-[14vw] md:w-[4vw] md:h-[4vw] rounded-full overflow-hidden bg-[#B1B1B1]">
+                        <img class="w-full h-full object-cover"src="/images/uploads/${img}" alt="">
+                    </div>
+                    <div class="contactdts">
+                        <h1>${username}</h1>
+                    </div>
+                </div>`
+
+                document.querySelector(".bottom").innerHTML += template
+            }
+
+        }
+
+        function appendnewGroup(img, groupName, groupId) {
+
+            if (!document.querySelector(`#abcd_${groupId}`)) {
+                const template = `
+                <div id="abcd_${groupId}" class="contact w-full h-[17.5vw] md:h-[5.2vw] bg-[#111B21] border-[#202C33] pl-2 pr-4 border-b-[1px] flex items-center text-lg md:text-base">
+                    <div class="imgAndname w-full h-full flex items-center gap-4">
+                        <div class="ImageDiv w-[14vw] h-[14vw] md:w-[4vw] md:h-[4vw] rounded-full overflow-hidden bg-[#B1B1B1]">
+                            <img class="w-full h-full object-cover"src="/images/uploads/${img}" alt="">
+                        </div>
+                        <div class="contactdts">
+                            <h1>${groupName}</h1>
+                        </div>
+                    </div>
+                    <button onClick = "joinGroup('${groupName}')" class="px-6 py-2 bg-green-600 rounded-lg">Join</button>
+                </div>`
+
+                document.querySelector(".groupsName").innerHTML += template
+            }
+
+        }
+
+        function NotMyFriends(img, username, userId) {
+
+            if (!document.querySelector(`#notFriends_${userId}`)) {
+                const template = `
+                <div id="notFriends_${userId}" class="contact w-full h-[17.5vw] md:h-[5.2vw] bg-[#111B21] border-[#202C33] pl-2 pr-4 border-b-[1px] flex items-center text-lg md:text-base">
+                    <div class="imgAndname w-full h-full flex items-center gap-4">
+                        <div class="ImageDiv w-[14vw] h-[14vw] md:w-[4vw] md:h-[4vw] rounded-full overflow-hidden bg-[#B1B1B1]">
+                            <img class="w-full h-full object-cover"src="/images/uploads/${img}" alt="">
+                        </div>
+                        <div class="contactdts">
+                            <h1>${username}</h1>
+                        </div>
+                    </div>
+                    <button id="Request_${userId}" onClick = "SendRequest('${userId}')" class="px-6 py-2 bg-green-600 rounded-lg">Req</button>
+                </div>`
+
+                document.querySelector(".chatsName").innerHTML += template
+            }
+
+        }
+
+        function SendRequest(userId) {
+            socket.emit('Request-send', {
+                SendRequestUserId: currentUserId,
+                RecieveRequestUserId: userId
+            })
+            document.querySelector(`#Request_${userId}`).textContent = 'Send'
+        }
+
+        function AllRequestedUser(img, username, requestUserId) {
+            const template = `
+                <div id="abcd_${requestUserId}" class="contact w-full h-[17.5vw] md:h-[5.2vw] bg-[#111B21] border-[#202C33] pl-2 pr-4 border-b-[1px] flex items-center text-lg md:text-base">
+                    <div class="imgAndname w-full h-full flex items-center gap-4">
+                        <div class="ImageDiv w-[14vw] h-[14vw] md:w-[4vw] md:h-[4vw] rounded-full overflow-hidden bg-[#B1B1B1]">
+                            <img class="w-full h-full object-cover"src="/images/uploads/${img}" alt="">
+                        </div>
+                        <div class="contactdts">
+                            <h1>${username}</h1>
+                        </div>
+                    </div>
+                    <button id="accept_${requestUserId}" onClick = "AcceptRequest('${requestUserId}')" class="px-4 mr-4 py-2 bg-green-600 rounded-lg">Accept</button>
+                    <button id="cancel_${requestUserId}" onClick = "CencalRequest('${requestUserId}')" class="px-4 py-2 border-[1px] border-zinc-600 rounded-lg">Cancel</button>
+                </div>`
+
+            document.querySelector(".RequestName").innerHTML += template
+        }
+
+        function AcceptRequest(RequestUserId) {
+            socket.emit('Accept-Request', {
+                AcceptRequestUserId: currentUserId,
+                SendRequestUserId: RequestUserId
+            })
+        }
+
+        function SendingRequest(img, username, requestUserId) {
+            const template = `
+                <div id="send_${requestUserId}" class="contact w-full h-[17.5vw] md:h-[5.2vw] bg-[#111B21] border-[#202C33] pl-2 pr-4 border-b-[1px] flex items-center text-lg md:text-base">
+                    <div class="imgAndname w-full h-full flex items-center gap-4">
+                        <div class="ImageDiv w-[14vw] h-[14vw] md:w-[4vw] md:h-[4vw] rounded-full overflow-hidden">
+                            <img class="w-full h-full object-cover"src="/images/uploads/${img}" alt="">
+                        </div>
+                        <div class="contactdts">
+                            <h1>${username}</h1>
+                        </div>
+                    </div>
+                    <button id="Send_${requestUserId}" onClick = "AcceptRequest('${requestUserId}')" class="px-4 mr-4 py-2 bg-green-600 rounded-lg">Pending</button>
+                    <button id="cancel_${requestUserId}" onClick = "CencalRequest('${requestUserId}')" class="px-4 py-2 border-[1px] border-zinc-600 rounded-lg">Cancel</button>
+                </div>`
+
+            document.querySelector(".sendRequestName").innerHTML += template
+        }
+
+        function backToChat() {
+            document.querySelector('.main > .right').style.display = "none"
+            document.querySelector('.main > .left').classList.add('!w-full')
+        }
+
+        function setCurrentchat(img, username, chatId) {
+            document.querySelector('.img-div').style.display = 'none';
+            document.querySelector("#currentchatImg").setAttribute('src', img)
+            document.querySelector("#currentchatUsername").textContent = username
+            document.querySelector('.main > .right').style.display = "initial"
+            document.querySelector('.main > .left').classList.add('!w-0')
+            document.querySelector('.main > .left').classList.remove('!w-full')
+            document.querySelector('.main > .right').classList.add('!w-full')
+            document.querySelector('.userDetails').classList.remove('top-[0%]')
+            document.querySelector('.userDetails').classList.add('top-[-100%]')
+            currentchatUsername = username
+
+            socket.emit('getMessage', {
+                Reciever: username,
+                Sender: currentUser
+            })
+
+            socket.emit('online-stutas', currentchatUsername);
+
+        }
+
+        function UserDetails() {
+            document.querySelector('.userDetails ').classList.add('top-[0%]')
+            const UserName = document.querySelector('#currentchatUsername').textContent;
+            socket.emit('contactUserDetails', UserName)
+            socket.on('UserDetails', UserDetails => {
+                SetUserDetails(UserDetails.img, UserDetails.username, UserDetails.about)
+            })
+        }
+
+        function SetUserDetails(img, username, about) {
+            document.querySelector('#UserImage').setAttribute('src', `/images/uploads/${img}`)
+            document.querySelector('.ContactUserName').textContent = username
+            document.querySelector('.AboutContactUser').textContent = about
+        }
+
+        function closeContact() {
+            document.querySelector('.userDetails ').classList.remove('top-[0%]')
+            document.querySelector('.userDetails ').classList.add('top-[-100%]')
+        }
+
+        function sendMessage() {
+            const message = document.querySelector("input").value.trim();
+            if (!message)
+                return
+            const template = `<div class="outgoingmsg px-4 py-1 bg-[#005C4B] w-fit text-[#E8ECEE] rounded-tr-none rounded-md ms-auto mb-3 max-w-64 text-lg md:text-base">
+                    ${message}
+                </div>`
+
+            document.querySelector(".conversationArea").innerHTML += template
+
+
+            const msg = {
+                msg: message,
+                Reciever: currentchatUsername,
+                Sender: currentUser
+            }
+
+            socket.emit('privatemsg', msg)
+        }
+
+        document.querySelector(".sendbtn").addEventListener("click", function () {
+            sendMessage();
+            document.querySelector(".emojionearea-editor").innerHTML = "";
+        })
+
+        function putOutgoingMessage(msgValue) {
+            if (!msgValue)
+                return
+            const template = `<div  class="outgoingmsg px-4 py-1 bg-[#005C4B] text-[#E8ECEE] rounded-tr-none w-fit rounded-md ms-auto mb-3 max-w-64 text-lg md:text-base">
+                    ${msgValue}
+                </div>`
+
+            document.querySelector('.conversationArea').innerHTML += template
+        }
+
+        function putIncomingMessage(msg) {
+            if (!msg)
+                return
+            const template = `<div class="incomingmsg px-4 py-1 bg-[#202C33] text-[#E8ECEE] rounded-tl-none w-fit rounded-md mb-3 max-w-64 text-lg md:text-base">
+                ${msg}
+            </div>`
+            document.querySelector('.conversationArea').innerHTML += template
+        }
+
+        socket.on('recievePrivatemsg', msg => {
+            putIncomingMessage(msg.msg)
+        })
+
+        socket.on('chatMessages', allMessages => {
+            document.querySelector(".conversationArea").innerHTML = ""
+            allMessages.forEach(function (singleMessage) {
+                if (singleMessage.Sender == currentUser)
+                    putOutgoingMessage(singleMessage.msg)
+                else {
+                    putIncomingMessage(singleMessage.msg)
+                }
+            })
+        })
+
+        function createGroup() {
+            const groupName = prompt("Enter Group Name");
+            if (!groupName) {
+                return
+            }
+            socket.emit('create-new-group', { groupName, sender })
+        }
+
+        socket.on('group-created', groupName => {
+            appendnewChat(groupName.img, groupName.groupName, groupName._id)
+        })
+
+        socket.on('group-already-exist', AlreadyExist => {
+            alert(AlreadyExist.AlreadyExist);
+        })
+
+        socket.on('created-group-join', groupDeatils => {
+            appendnewChat(groupDeatils.img, groupDeatils.groupName, groupDeatils.id)
+        })
+
+        socket.on('NewGroup', NewGroup => {
+            appendnewGroup(NewGroup.img, NewGroup.groupName, NewGroup._id)
+        })
+
+        socket.on('userOnline', isOnline => {
+            if (isOnline) {
+                document.querySelector('.onlineStutas').innerHTML = 'Online'
+            }
+            else {
+                document.querySelector('.onlineStutas').innerHTML = 'ABCD'
+            }
+        })
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.js"
+        integrity="sha512-aGWPnmdBhJ0leVHhQaRASgb0InV/Z2BWsscdj1Vwt29Oic91wECPixuXsWESpFfCcYPLfOlBZzN2nqQdMxlGTQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(".emoji").emojioneArea({
+            pickerPosition: "top",
+        });
+    </script>
+</body>
+
+</html>
