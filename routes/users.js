@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/WhatsappData");
+require('dotenv').config({ path: './.env' })
+mongoose.connect(process.env.Mongo_Url);
 const plm = require('passport-local-mongoose');
 
 const userSchema = mongoose.Schema({

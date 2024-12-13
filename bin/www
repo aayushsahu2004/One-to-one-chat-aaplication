@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('whatsappclone:server');
 var http = require('http');
 let socketapi = require("../socketapi");
+require('dotenv').config({ path: './.env' })
 
 /**
  * Get port from environment and store in Express.
